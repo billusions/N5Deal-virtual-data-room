@@ -10,3 +10,11 @@ coverage/
 
 .env
 .env.local
+
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Superseded source material — not worth versioning
+/Test Room.pdf
