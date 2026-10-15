@@ -1,13 +1,11 @@
 import { APIRequestContext, APIResponse } from '@playwright/test';
-import { testEmail } from './ids';
+import { testEmail, TEST_USER_PASSWORD } from './ids';
 
 export interface TestUser {
   email: string;
   password: string;
   token: string;
 }
-
-const DEFAULT_PASSWORD = 'Qa-Passw0rd-123';
 
 export function authHeaders(token: string): Record<string, string> {
   return { Authorization: `Bearer ${token}` };
@@ -26,7 +24,7 @@ export async function registerUser(
   opts?: { label?: string; password?: string },
 ): Promise<TestUser> {
   const email = testEmail(opts?.label ?? 'user');
-  const password = opts?.password ?? DEFAULT_PASSWORD;
+  const password = opts?.password ?? TEST_USER_PASSWORD;
   const res = await request.post('/auth/register', {
     data: { email, password, name: 'QA Test User' },
   });

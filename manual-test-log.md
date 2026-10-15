@@ -2,6 +2,19 @@
 
 Oct 15, 2026 · @Zhanna · Requirement-by-requirement checklist executed against the deployed app. "Fine" = passed as expected. Findings are cross-referenced to [findings-report.md](findings-report.md) (M = Medium, L = Low, Risk = open risk item).
 
+## Fixtures (R8/R9)
+
+PDF files used for upload/viewer testing, in [fixtures/manual-testing/](fixtures/manual-testing/):
+
+| File | Purpose |
+|---|---|
+| `simple-invoice.pdf` | Baseline valid PDF, normal size |
+| `lorem-ipsum.pdf` | Valid PDF with an embedded title (viewer-name display check) |
+| `lorem-ipsum-201-pages.pdf` | Multi-page PDF — scroll/load behavior |
+| `broken.pdf` | Non-PDF bytes renamed to `.pdf` — see finding M2 |
+| `99mb.pdf` | Oversized file — upload size-limit check (~50MB boundary) |
+| `not-a-pdf.txt` | Plain text file — non-PDF upload rejection (used by the E2E suite too) |
+
 ## R1. Authentication
 - Register with valid data → logged in, room created automatically — fine
 - Same email twice → clear error, no crash (known-fixed-bug retest) — fine

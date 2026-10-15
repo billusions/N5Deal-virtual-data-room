@@ -13,5 +13,5 @@
       "@support/*": ["src/support/*"]
     }
   },
-  "include": ["tests/**/*.ts", "src/**/*.ts", "playwright.config.ts"]
+  "include": ["specs/**/*.ts", "src/**/*.ts", "playwright.config.ts"]
 }
