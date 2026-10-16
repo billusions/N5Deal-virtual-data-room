@@ -17,14 +17,14 @@ PDF files used for upload/viewer testing, in [fixtures/manual-testing/](fixtures
 
 ## R1. Authentication
 - Pass — Register with valid data → logged in, a room is created automatically
-- Pass — Same email twice → clear error, no crash (checked again since the dev said this was fixed)
+- Pass — Same email twice → clear error, no crash (checked again since the dev said this was fixed); no link to log in instead (see L17)
 - Pass — Same email, different case (Test@Example.com vs test@example.com)
 - Fail — Email with leading/trailing spaces → rejected instead of trimmed, confirmed with an automated API test (see L12b)
 - Pass — Empty fields, invalid email format → clear messages
-- Note — Password rules: very short (1 char) is accepted; very long is capped at 72 characters (a bcrypt limit)
+- Pass — Password under 8 characters → "Password must be at least 8 characters"; over 72 characters → "Password must be at most 72 characters" (both also confirmed with an automated API test)
 - Pass — Login with valid credentials → "My data rooms"
 - Pass — Wrong password or unknown email → the error doesn't say which one was wrong
-- Not tested — Many wrong password attempts → no lockout seen; not fully tested (see Risk items)
+- Note — 11 wrong password attempts in a row → no warning and no lockout; the correct password then logged in straight away (see Risk items)
 - Pass — Sign out → redirected to login
 - Pass — After sign out, browser Back → no private data shown
 - Pass — Private URL (/folder/<id>) while logged out → login page
@@ -39,11 +39,10 @@ PDF files used for upload/viewer testing, in [fixtures/manual-testing/](fixtures
 - Pass — Owner's file URL opened as another user → blocked
 - Pass — Same URLs while logged out → login page
 - Pass — A viewer can't see the owner's other items, in "Shared with me" or by search
-- Pass — API call with no token → 401
-- Pass — API call with a fake/broken token → 401
+- Not tested — API calls with no token or a fake/broken token → not checked by hand; covered by automated API tests (401 on every protected endpoint)
 - Pass — Error messages don't reveal the names or details of private items
 
-All R2 checks passed.
+All R2 checks done by hand passed; the token checks are covered by automated API tests.
 
 ## R3. UX, edge cases, error states
 - Pass — Every button and menu item does something; nothing is dead or "coming soon"
@@ -55,7 +54,7 @@ All R2 checks passed.
 - Pass — Keyboard: Enter submits dialogs, Esc closes them, Tab order makes sense
 - Pass — Narrow window (~400px wide) → still usable, nothing overlaps
 - Fail — Long names in the list, breadcrumb, and dialogs → see M4, L8
-- Pass — An unknown URL (/abc) → a proper "not found" page, with a way back
+- Note — An unknown URL (/abc) → silently redirects to the home page, with no "page not found" message (an unknown folder URL, /folder/abc, does show a proper "Folder not found" page with "Back to data room")
 - Pass — The URL of a deleted item → a clear "not found" message
 - Pass — Browser zoom at 200% → still usable
 - Pass — Errors in the browser console during normal use → none seen
@@ -117,7 +116,8 @@ All R2 checks passed.
 - Fail — Going offline mid-upload, then retrying after reconnecting → see M3
 - Fail — Failed uploads still "use up" their file name → see L7
 - Pass — A large PDF (20–50MB) → a clear message, e.g. "99mb.pdf is larger than 50 MB"
-- Not tested — An empty (0 KB) PDF, and a 100+ character file name → not fully tested this time
+- Pass — An empty (0 KB) PDF → rejected with "size must not be less than 1"; blocked correctly, but the message is technical rather than telling the user what's wrong (same kind of issue as L6)
+- Pass — A 100+ character file name → uploaded fine (how the long name is shown in the list is a separate issue, see M4)
 - Pass — As a viewer in a shared folder → no upload option shown
 
 ## R9. View a file
@@ -127,6 +127,7 @@ All R2 checks passed.
 - Pass — Closing the viewer, or pressing Back → returns to the same folder
 - Pass — Pressing F5 while viewing → stays on the same file
 - Pass — Download → saved with the correct file name, not a storage ID
+- Fail — Download a file with parentheses in its name ("Lorem ipsum (5).pdf") → saved as "Lorem ipsum %285%29.pdf" (see M5)
 - Pass — As a viewer → can view/download if allowed, but can't edit
 - Fail — The row's actions menu (⋮) has no "View" or "Open" option — only Rename, Move, Download, Share, Delete. The only way to open a file is to click the row itself, and nothing tells you that (see L16, found while writing the browser test for the viewer)
 

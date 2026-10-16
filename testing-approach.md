@@ -4,11 +4,11 @@ Oct 16, 2026 · @Zhanna
 
 ## Approach
 
-I test by risk: turn the task's requirements into a checklist (R1–R16, E1–E2), explore by hand first with real browsers and two accounts (one owner, one person it's shared with), then automate the cases that would matter most if they broke silently — access control, sharing/revoking access, and data integrity. This follows the testing pyramid: unit tests belong to the developers, most of my automated tests are at the API level, and a few browser tests cover what only a real browser can check. Full detail is in [test-plan.md](test-plan.md); what I found is in [findings-report.md](findings-report.md) and [manual-test-log.md](manual-test-log.md).
+I test by risk: turn the task's requirements into a checklist (R1–R16, E1–E2), explore by hand first with real browsers and two accounts (one owner, one person it's shared with), logging every result and finding as I go, then use that log to pick what to automate — the cases that would matter most if they broke silently: access control, sharing/revoking access, and data integrity. This follows the testing pyramid: unit tests belong to the developers, most of my automated tests are at the API level, and a few browser tests cover what only a real browser can check. Full detail is in [test-plan.md](test-plan.md); what I found is in [findings-report.md](findings-report.md) and [manual-test-log.md](manual-test-log.md).
 
 ## AI usage
 
-AI (Claude Code) was used all through this work, but always checked. Every point below was tested by actually running it against the live app, or by reading the product's own source code — nothing was just taken on trust.
+AI (Claude Code) was used all through this work, but always checked. Every point below was tested by actually running it against the live app, or checked against the product's own source code (Claude read it; I didn't read it myself) — nothing was just taken on trust.
 
 - Understanding the requirements and planning tests: turning task.md into the R1–R16/E1–E2 checklist, and putting things in priority order by risk in the test plan.
 - Writing and organizing: turning rough notes from exploring the app into the test plan, a findings report sorted by priority, and the full step-by-step log — including rewriting bug reports to be clearer about what was expected versus what actually happened.

@@ -162,3 +162,26 @@ test.describe('R8/R10/R11/E1 File name conflicts (Priority 4: upload)', () => {
     expect([message].flat().join(' ')).toMatch(/50 ?MB/i);
   });
 });
+
+test.describe('R9 Download file name (Priority 4: upload)', () => {
+  // M5: the download's Content-Disposition header encodes the file name twice, so
+  // "(5)" arrives as %25285%2529 and the browser saves "%285%29". Written against the
+  // EXPECTED behavior and marked as a known failure so the suite documents the bug
+  // but stays green; this flips to a visible failure once it's fixed.
+  test('a downloaded file keeps parentheses in its name instead of saving them encoded', async ({ request }) => {
+    test.fail();
+    const owner = await registerUser(request, { label: 'download-name' });
+    const dataRoomId = await getDefaultDataRoomId(request, owner.token);
+    const name = testName('report') + ' (5).pdf';
+    const file = await uploadFile(request, owner.token, { dataRoomId, name, bytes: makeValidPdf() });
+
+    const urlRes = await request.get(`/files/${file.id}/download-url`, { headers: authHeaders(owner.token) });
+    expect(urlRes.status()).toBe(200);
+    const download = await request.get((await urlRes.json()).url);
+    expect(download.status()).toBe(200);
+
+    const disposition = download.headers()['content-disposition'] ?? '';
+    const encodedName = disposition.match(/filename\*=UTF-8''([^;]+)/)?.[1] ?? '';
+    expect(decodeURIComponent(encodedName)).toBe(name);
+  });
+});

@@ -10,8 +10,8 @@ I found no Critical or High severity bugs. Access control (R2) and sharing/revok
 |---|---|
 | Critical | 0 |
 | High | 0 |
-| Medium | 4 |
-| Low | 17 |
+| Medium | 5 |
+| Low | 18 |
 | Open risk items (not confirmed bugs) | 3 |
 
 ## Medium
@@ -45,6 +45,14 @@ Actual: The full name is shown on one line, the table gets a horizontal scrollba
 
 ![A 120-character file name pushes the Size, Modified, and actions columns off-screen](fixtures/screenshots/m4-long-filename-breaks-table.png)
 
+### M5 — [Download] File names with parentheses or "&" are saved encoded — "Lorem ipsum (5).pdf" downloads as "Lorem ipsum %285%29.pdf"
+Area: Download (R9) · Why it matters: The app's own conflict handling names duplicates "(1)", "(2)", so this hits every file the app has renamed, not just unusual names. In due diligence, the downloaded copies are what people keep and pass on, and they end up with broken names.
+Steps: Download a file whose name contains parentheses, e.g. "Lorem ipsum (5).pdf".
+Expected: The saved file is named "Lorem ipsum (5).pdf".
+Actual: The saved file is named "Lorem ipsum %285%29.pdf". Names without special characters (Rental_agreement.pdf) download correctly; "&" breaks the same way ("a b&c.pdf" → "a b%26c.pdf"), spaces are fine.
+Cause (checked against the live API): the download's Content-Disposition header encodes the name twice — filename*=UTF-8''Lorem%20ipsum%20%25285%2529.pdf, where %2528 is an already-encoded %28 encoded again. The browser decodes it once and saves %28.
+I wrote a known-failing automated test for this in tests/specs/api/files-and-folders.spec.ts.
+
 ## Low
 
 | # | Area | Finding | Note |
@@ -66,11 +74,12 @@ Actual: The full name is shown on one line, the table gets a horizontal scrollba
 | L14 | Shared with me | The list doesn't show who shared an item, or which data room it came from | This matters once someone receives items shared by more than one person |
 | L15 | File list | There's no total item count shown for large folders that use infinite scroll | Suggest e.g. "124 items" |
 | L16 | File list | The row's actions menu (⋮) has no "View" or "Open" option — only Rename, Move, Download, Share, and Delete | Opening a file only works by clicking on the row itself, which you can't tell from the menu. Found while writing the browser test for the file viewer |
+| L17 | Auth | Registering with an email that already has an account shows an error, but no way forward | Suggest a "Log in instead" link in the error that opens the login page with the email already filled in (a link rather than an automatic redirect, in case the email was mistyped). This doesn't reveal anything new, since the error already says the email is taken |
 
 ## Open risk items (not confirmed bugs — need a clear decision from the team)
 
 I couldn't fully confirm whether these pass or fail during this round of testing. They look like deliberate design choices, so the team should make a clear decision about each one, instead of leaving it as an accident.
 
-- I didn't see any lockout or limit on repeated failed logins. I can't be fully sure there isn't one — this is worth checking directly before release, since this product is used for due diligence.
+- No lockout or limit on repeated failed logins: after 11 wrong passwords in a row there was no warning, and the correct password still logged in straight away. A limit might still start at a higher number or work per IP address, so this is worth checking with the team before release, since this product is used for due diligence.
 - Login tokens (JWTs) are not cancelled on the server when you log out (this is by design — the README says they last 7 days, with no way to refresh them). A token copied before logout (for example, from DevTools) may keep working until it expires naturally. This can be fine as a deliberate choice for a first version, but it shouldn't just happen by accident.
 - A file-download link opened before access is revoked stays working for up to 5 minutes after the revoke (this matches the link's own lifetime, which the README documents). I checked this: the link worked right after revoking access, and stopped working about 5 minutes later. This is fine as a known, short time window, but it should be mentioned clearly in the release notes.

@@ -4,7 +4,7 @@ This is a QA test assignment for N5Deal. Full instructions: [CLAUDE.md](CLAUDE.m
 
 ## Assumptions
 - I test the live app (on Vercel and Railway), not a local copy — I don't have the passwords/keys needed to run it locally.
-- I looked at the [evo9/virtual-data-room](https://github.com/evo9/virtual-data-room) source code only to design better tests, not to run it myself.
+- I didn't read the [evo9/virtual-data-room](https://github.com/evo9/virtual-data-room) source code myself. Claude Code read it to help design the API tests (see AI usage in [testing-approach.md](testing-approach.md)); the code was never run locally.
 - The test accounts are shared with other people. So my tests always make their own new data instead of changing anything that already exists.
 - I test the API directly too, not only through the screen (UI).
 
@@ -52,10 +52,10 @@ To view the report once the run finishes:
 GitHub keeps these report files for 14 days, then deletes them. So don't save a link to one run's report — it will stop working.
 
 What's inside tests/:
-- tests/specs/api/ — calls the backend directly, with no browser: login, access control (Priority 1), sharing and revoking access (Priority 2), and file/folder name clashes (Priority 3/4).
+- tests/specs/api/ — calls the backend directly, with no browser: login, access control (Priority 1), sharing and revoking access (Priority 2), file/folder name clashes (Priority 3/4), and downloaded file names.
 - tests/specs/e2e/ — opens a real Chrome browser against the live app, for the few important flows that only a real browser can check: sign up → create folders → sign out, upload a file → view it, and share → revoke access, using two separate browser sessions (one for the owner, one for the person it's shared with).
 - tests/src/support/ — shared helper code: a small API client, a helper to sign up through the UI, a way to make unique test names, and PDF test files made on the fly.
 
 Rules I follow:
 - Every test creates its own new user and its own new data, with a unique name. The app and its accounts are shared with other people, so no test ever touches data that belongs to someone else.
-- Two tests record known bugs (sharing with yourself, and a space in the login email) using Playwright's test.fail(). They check for the *correct* behavior, which currently fails — that's expected, so the whole test run still shows as green without hiding the bug. If a bug ever gets fixed, that one test will suddenly pass when it shouldn't, and that's the signal to come back and update it.
+- Three tests record known bugs (sharing with yourself, a space in the login email, and parentheses in a downloaded file name) using Playwright's test.fail(). They check for the *correct* behavior, which currently fails — that's expected, so the whole test run still shows as green without hiding the bug. If a bug ever gets fixed, that one test will suddenly pass when it shouldn't, and that's the signal to come back and update it.

@@ -24,10 +24,10 @@ The requirements come from task.md. Priority shows how bad it would be if that p
 
 | ID | Requirement | Priority | Test level |
 |----|---|---|---|
-| R1 | Email/password authentication | High | API + E2E |
+| R1 | Email/password authentication | High | API + E2E + manual |
 | R2 | Data Room visible only to its owner unless shared | Critical | API + manual |
 | R3 | Clean UX, edge cases and error states, no unimplemented features | Medium | Manual |
-| R4 | Create and nest folders | High | API + E2E |
+| R4 | Create and nest folders | High | API + E2E + manual |
 | R5 | View contents with breadcrumb navigation | Medium | Manual + E2E |
 | R6 | Rename folder | Medium | API + manual |
 | R7 | Delete folder with nested content, with warning | High | API + manual |
@@ -37,7 +37,7 @@ The requirements come from task.md. Priority shows how bad it would be if that p
 | R11 | Move file to another folder | Medium | API + manual |
 | R12 | Delete file | Medium | API + manual |
 | R13 | Share room, folder or file read-only, including nested content | Critical | API + manual |
-| R14 | Public link sharing | Critical | API + E2E |
+| R14 | Public link sharing | Critical | API + E2E + manual |
 | R15 | Permissioned sharing to specific users | Critical | API + manual |
 | R16 | Owner can revoke access | Critical | API + manual |
 | E1 | Upload files with the same name | Medium | Manual |
