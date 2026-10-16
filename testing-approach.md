@@ -4,17 +4,17 @@ Oct 16, 2026 · @Zhanna
 
 ## Approach
 
-Risk-based: map the task's requirements (R1–R16, E1–E2), explore manually first with real browsers and two accounts (owner + recipient), then automate the scenarios that matter most if they silently broke — access control, sharing/revoke, and data integrity — following the testing pyramid (unit owned by the developers, API as the bulk of automation, a handful of E2E journeys for what only a real browser can verify). Full detail in [test-plan.md](test-plan.md); findings in [findings-report.md](findings-report.md) and [manual-test-log.md](manual-test-log.md).
+We test by risk: turn the task's requirements into a checklist (R1–R16, E1–E2), explore by hand first with real browsers and two accounts (one owner, one person it's shared with), then automate the cases that would matter most if they broke silently — access control, sharing/revoking access, and data integrity. This follows the testing pyramid: unit tests belong to the developers, most of our automated tests are at the API level, and a few browser tests cover what only a real browser can check. Full detail is in [test-plan.md](test-plan.md); what we found is in [findings-report.md](findings-report.md) and [manual-test-log.md](manual-test-log.md).
 
 ## AI usage
 
-AI (Claude Code) was used throughout, always under review — every AI-assisted claim below was checked by actually running it against the live app or reading the product's source, not taken on faith.
+AI (Claude Code) was used all through this work, but always checked. Every point below was tested by actually running it against the live app, or by reading the product's own source code — nothing was just taken on trust.
 
-- **Requirement analysis & test design:** turning task.md's requirements into the R1–R16/E1–E2 checklist and the risk-based priority ordering in the test plan.
-- **Drafting and organizing:** structuring raw exploratory notes into the test plan, a prioritized findings report, and the full execution log — including rewording bug reports into clearer expected/actual statements.
-- **Reading the product's source** (controllers, DTOs, access-control logic on GitHub) to write API tests against real routes and validation rules instead of guessing, and to understand *why* certain behavior occurs (e.g. why unauthorized access returns 404 instead of 403, why a revoked public link returns 410).
-- **Scaffolding the Playwright framework** (API + E2E projects, shared fixtures/helpers, CI workflow).
-- **Live DOM exploration:** before writing E2E tests, drove a real headless browser against the deployed app to discover actual selectors and page flows, rather than writing UI tests blind.
-- **Independent verification of manual findings:** re-running key findings against the live API surfaced one correction (L12 — the sharing-email-trim bug is frontend-only, the backend already works) and one new finding (L16 — no "View" item in the file row's actions menu, discovered while writing the viewer test).
+- Understanding the requirements and planning tests: turning task.md into the R1–R16/E1–E2 checklist, and putting things in priority order by risk in the test plan.
+- Writing and organizing: turning rough notes from exploring the app into the test plan, a findings report sorted by priority, and the full step-by-step log — including rewriting bug reports to be clearer about what was expected versus what actually happened.
+- Reading the product's own source code (on GitHub) to write API tests against the real routes and rules, instead of guessing, and to understand *why* the app behaves a certain way — for example, why a blocked request returns 404 instead of 403, or why a cancelled public link returns 410.
+- Setting up the Playwright test framework (API tests, browser tests, shared helper code, and the automatic CI tests).
+- Looking at the real page structure first: before writing browser tests, we used a real (invisible, "headless") browser against the live app to see its actual page structure and flows, instead of writing tests blind.
+- Double-checking the manual findings on our own: testing key findings again against the live API found one correction (L12 — the email-spacing bug in sharing is only on screen, the backend already handles it correctly) and one new finding (L16 — no "View" option in the file row's menu, found while writing the viewer test).
 
-Where AI helped most: speed on structure and boilerplate (requirement mapping, report formatting, test scaffolding), and a second pass that caught one of my own findings' incorrect root cause by actually hitting the API instead of assuming. It did not replace judgment on prioritization, severity, or what was actually worth automating — those calls, and verifying every result against the real app, stayed manual.
+Where AI helped the most: speed on structure and repeated setup work (turning requirements into a list, formatting reports, setting up tests), and a second check that caught one of our own findings having the wrong explanation, by actually testing the API instead of assuming. AI did not replace judgment on what matters most, how serious something is, or what was really worth automating — those decisions, and checking every result against the real app, were always made by hand.

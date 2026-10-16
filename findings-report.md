@@ -1,10 +1,10 @@
 # Virtual Data Room — Findings Report
 
-Oct 15, 2026 · @Zhanna · See [test-plan.md](test-plan.md) for methodology and severity definitions, and [manual-test-log.md](manual-test-log.md) for the full requirement-by-requirement execution log this report is drawn from.
+Oct 15, 2026 · @Zhanna · See [test-plan.md](test-plan.md) for our method and what each severity level means, and [manual-test-log.md](manual-test-log.md) for the full, step-by-step list of checks behind this report.
 
 ## Summary
 
-No Critical or High severity bugs were found. Access control (R2) and sharing/revoke (R13–R16) — the two highest-risk areas for a due diligence product — passed every manual check performed. Findings are concentrated in upload error-handling and UI polish.
+We found no Critical or High severity bugs. Access control (R2) and sharing/revoking access (R13–R16) — the two riskiest areas for a due-diligence product — passed every manual check we did. Most of what we found is about upload error handling and how the app looks and feels.
 
 | Severity | Count |
 |---|---|
@@ -17,53 +17,53 @@ No Critical or High severity bugs were found. Access control (R2) and sharing/re
 ## Medium
 
 ### M1 — [Delete folder] Confirmation dialog doesn't warn that the folder is shared
-**Area:** Data integrity (R7) · **Why it matters:** A data room is used in live deals; cutting off a buyer's access without warning matters.
-**Expected:** Dialog states something like "This folder is shared with 2 people and has a public link. They will lose access."
-**Actual:** Warning shows item/size counts but no mention of active shares.
+Area: Data integrity (R7) · Why it matters: A data room is used during real business deals. Cutting off a buyer's access with no warning is a real problem.
+Expected: The dialog says something like "This folder is shared with 2 people and has a public link. They will lose access."
+Actual: The warning shows how many items and how much size will be deleted, but says nothing about the shares.
 
-### M2 — [Upload] Non-PDF file renamed to `.pdf` is accepted, then fails to open in the viewer
-**Area:** Upload (R8) · **Why it matters:** In due diligence, a document that looks valid in the list but is actually broken is a real problem; accepting arbitrary content under a `.pdf` name is also a content-validation gap.
-**Expected:** Upload rejected with a message like "This file isn't a valid PDF."
-**Actual:** Upload succeeds; opening the file shows the browser error "Failed to load PDF document," and the viewer header shows an internal file ID (`0b491ba5-...`) instead of the file name (`1.pdf`).
+### M2 — [Upload] Non-PDF file renamed to .pdf is accepted, then fails to open in the viewer
+Area: Upload (R8) · Why it matters: In due diligence, a file that looks fine in the list but is actually broken is a real problem. Accepting any file content just because it's named .pdf is also a gap in checking the file.
+Expected: The upload is rejected with a message like "This file isn't a valid PDF."
+Actual: The upload works. Opening the file shows the browser's own error, "Failed to load PDF document," and the viewer's title bar shows an internal file ID (0b491ba5-...) instead of the real file name (1.pdf).
 
 ### M3 — [Upload] Retry after connection loss fails with status 400; file can't be recovered
-**Area:** Upload (R8) · **Why it matters:** Uploads on unstable connections can't be completed via retry — the user has to start over, with no indication why.
-**Steps:** Upload 3 PDFs → go Offline mid-upload → "Some uploads failed – Network Error" → go back online → click Retry.
-**Expected:** The file uploads successfully and appears once.
-**Actual:** Retry fails with "Upload failed with status 400." Network log shows the retry re-sending the file to the *same* storage URL, which the storage layer rejects (`409 Duplicate – "The resource already exists" (KeyAlreadyExists)`) instead of re-confirming the existing upload. The UI surfaces this as a generic, misleading "status 400."
-**Related:** L7 (failed uploads reserve file names) shares the same root cause — abandoned uploads are not cleaned up server-side.
+Area: Upload (R8) · Why it matters: If the connection is unstable, a user can't finish an upload by retrying — they have to start over, and nothing tells them why.
+Steps: Upload 3 PDFs → go Offline mid-upload → "Some uploads failed – Network Error" → go back online → click Retry.
+Expected: The file uploads successfully and appears once.
+Actual: The retry fails with "Upload failed with status 400." The network log shows that the retry sends the file to the *same* storage link again, and storage rejects it (409 Duplicate – "The resource already exists" (KeyAlreadyExists)), instead of just confirming the upload that's already there. The screen shows this as a generic, confusing "status 400."
+Related: L7 (failed uploads still "use up" their file name) comes from the same cause — uploads that failed are never cleaned up on the server.
 
-### M4 — [File list] Long file name is not truncated — table expands and pushes columns off-screen
-**Area:** UX/polish (R3, R10) · **Why it matters:** One long name breaks the layout for the entire folder and hides the row's `⋮` actions menu.
-**Expected:** Long names truncate with `…`; full name on hover; columns stay in place.
-**Actual:** Full name shown on one line, table gains horizontal scroll, Size/Modified/actions pushed out of view.
+### M4 — [File list] Long file name is not shortened — table expands and pushes columns off-screen
+Area: Look and feel (R3, R10) · Why it matters: One long file name breaks the layout for the whole folder and hides the ⋮ menu on that row.
+Expected: Long names get cut short with …, and the full name shows when you hover over it. The columns stay in place.
+Actual: The full name is shown on one line, the table gets a horizontal scrollbar, and the Size/Modified columns and the actions menu get pushed off the screen.
 
 ## Low
 
 | # | Area | Finding | Note |
 |---|---|---|---|
-| L1 | Sharing | Owner can share an item with their own email; it appears in "Shared with me" | Expected to be blocked with a message |
-| L2 | Navigation | "My data rooms" label implies multiple rooms, but a user has exactly one with no way to create another | Naming/IA mismatch with actual capability |
-| L3 | Upload | File-type rejection message states the problem but not what to do (e.g. `"huge_flower.jpg is not a PDF"`) | Suggest: `"huge_flower.jpg can't be uploaded. Only PDF files are supported."` |
-| L4 | Upload | Error toast visually overlaps the upload progress panel when a PDF and non-PDF are uploaded together | Notifications should stack, not cover each other |
-| L5 | Upload | Rejected-files list has very low text contrast, and renders as one long comma-separated line | Hard to read; unbounded with 20+ rejections — show one per line or "and N more" |
-| L6 | Upload | Error wording is technical ("Network Error", "status 400") rather than user-actionable | E.g. "Upload failed. Check your connection and try again." |
-| L7 | Upload | Failed uploads still reserve their file name; a re-upload of the same file gets renamed (`(4)` instead of `(3)`) even though nothing with that name is visible | Same root cause as M3 — abandoned uploads not cleaned up (README documents this) |
-| L8 | Navigation | Breadcrumb is not truncated for deep paths / long folder names — spans multiple lines and keeps growing | Low; would be Medium if it breaks layout on a narrow screen |
-| L9 | Folders | Folder name is capped at 50 characters with no message — typing silently stops | User doesn't know why typing stopped; suggest a character counter or a "Max 50 characters" hint. Also inconsistent with file rename, which does show "Name is too long" (see manual-test-log R4 vs R10) |
-| L10 | File viewer | Viewer header shows the PDF's internal title or a storage ID instead of the data room file name | Observed specifically for broken/untitled PDFs (see M2); normal PDFs displayed the correct name correctly in retest |
-| L11 | Rename | Rename dialog doesn't preselect the current name on open | User must manually delete the old name first; for files, ideally select only the name part (not `.pdf`) |
-| L12 | Sharing | Share dialog's **client-side** validation rejects an email with a trailing/leading space (`"Enter a valid email"`) | **Corrected during automation:** confirmed frontend-only — the API itself (`CreateShareDto`) already trims the email server-side and the share succeeds (verified directly against the live API). Fixing the share dialog's input validation to trim before checking would resolve this with no backend change needed |
-| L12b | Auth | Login/register reject an email with a leading/trailing space **at the API itself**, not just the UI | Different root cause from L12, despite the similar symptom: `LoginDto`/`RegisterDto` have no trim-before-validate step, so the backend rejects it directly (400) regardless of what the UI does. Automated as a known-failing test in `tests/api/auth.spec.ts` |
-| L13 | Sharing | A folder shared directly *and* via a shared parent appears twice for the recipient | Arguably acceptable, but confusing without a hint like "Already shared through 'parent folder'" |
-| L14 | Shared with me | List doesn't show who shared an item or which data room it came from | Matters once a recipient receives items from multiple parties |
-| L15 | File list | No total item count shown for large folders using infinite scroll | Suggest e.g. "124 items" |
-| L16 | File list | Row actions menu (⋮) has no "View"/"Open" item — Rename, Move, Download, Share, Delete only | Opening a file only works by clicking the row itself; not discoverable from the menu. Found while writing the E2E viewer test |
+| L1 | Sharing | An owner can share an item with their own email address, and it then shows up in their own "Shared with me" | Expected to be blocked with a message |
+| L2 | Navigation | The label "My data rooms" suggests you can have more than one, but each user only ever has exactly one, with no way to make another | The label doesn't match what the app actually lets you do |
+| L3 | Upload | The file-type error message says what's wrong, but not what to do about it (e.g. "huge_flower.jpg is not a PDF") | Suggest: "huge_flower.jpg can't be uploaded. Only PDF files are supported." |
+| L4 | Upload | When uploading a PDF and a non-PDF together, the error message covers part of the upload progress panel | Notifications should stack, not cover each other |
+| L5 | Upload | The list of rejected files is hard to read (very light text), and shows as one long line separated by commas | This gets worse with 20+ rejected files — show one file per line instead, or "and N more" |
+| L6 | Upload | Error messages use technical words ("Network Error", "status 400") instead of telling the user what to do | E.g. "Upload failed. Check your connection and try again." |
+| L7 | Upload | A failed upload still "keeps" its file name. Uploading the same file again gets renamed with a higher number ((4) instead of (3)), even though nothing with that name is visible anywhere | Same cause as M3 — failed uploads are never cleaned up (the README also mentions this) |
+| L8 | Navigation | The breadcrumb trail doesn't get shortened for deep folders or long names — it spreads over several lines and keeps growing | Low; would be Medium if it breaks the layout on a narrow screen |
+| L9 | Folders | A folder name is limited to 50 characters, with no message — typing just silently stops | The user has no idea why typing stopped. Suggest a character counter, or a "Max 50 characters" message. Also inconsistent with renaming a file, which does show "Name is too long" (see manual-test-log R4 vs R10) |
+| L10 | File viewer | The viewer's title bar shows the PDF's own internal title, or a storage ID, instead of the file's real name in the data room | Seen only with broken or untitled PDFs (see M2). When we checked again, normal PDFs showed the correct name |
+| L11 | Rename | The rename box doesn't select the current name when it opens | The user has to delete the old name by hand first. For files, it would be better to select only the name part (not the .pdf ending) |
+| L12 | Sharing | The share box's own on-screen check rejects an email with a space before or after it ("Enter a valid email") | Fixed during automation: we confirmed this is only in the screen's own code — the API itself (CreateShareDto) already removes the extra spaces on its side, and the share works fine there (checked directly against the live API). Fixing the share box's own check to remove spaces first would solve this, with no change needed on the server |
+| L12b | Auth | Login and sign-up reject an email with a space before or after it, in the API itself, not only on screen | This has a different cause from L12, even though it looks the same: LoginDto/RegisterDto don't remove extra spaces before checking the email, so the server itself rejects it (400), no matter what the screen does. We wrote a known-failing automated test for this in tests/api/auth.spec.ts |
+| L13 | Sharing | If a folder is shared directly, and also shared because its parent folder is shared, it shows up twice for the person it's shared with | This could be okay, but it's confusing without a hint like "Already shared through 'parent folder'" |
+| L14 | Shared with me | The list doesn't show who shared an item, or which data room it came from | This matters once someone receives items shared by more than one person |
+| L15 | File list | There's no total item count shown for large folders that use infinite scroll | Suggest e.g. "124 items" |
+| L16 | File list | The row's actions menu (⋮) has no "View" or "Open" option — only Rename, Move, Download, Share, and Delete | Opening a file only works by clicking on the row itself, which you can't tell from the menu. Found while writing the browser test for the file viewer |
 
-## Open risk items (not confirmed bugs — flagged for explicit product sign-off)
+## Open risk items (not confirmed bugs — need a clear decision from the team)
 
-These were not conclusively verified as pass or fail in this testing pass; they are architectural trade-offs worth a deliberate decision rather than silent defaults.
+We couldn't fully confirm whether these pass or fail during this round of testing. They look like deliberate design choices, so the team should make a clear decision about each one, instead of leaving it as an accident.
 
-- **No observed lockout or rate limit on repeated failed login attempts.** Not confirmed to be absent — worth explicit verification before release, given the product's due-diligence use case.
-- **JWTs are not revoked server-side on logout** (by design — README documents 7-day expiry, no refresh). A token captured before logout (e.g. via DevTools) may remain valid until natural expiry. Acceptable if this is a conscious trade-off for an MVP; should not be an unexamined default.
-- **A signed file-download URL opened before an access revoke remains valid for up to 5 minutes after the revoke** (signed URL lifetime, documented in the README). Verified: a link worked immediately after revoke and expired ~5 minutes later. Acceptable as a known, bounded window, but should be called out explicitly in release notes.
+- We didn't see any lockout or limit on repeated failed logins. We can't be fully sure there isn't one — this is worth checking directly before release, since this product is used for due diligence.
+- Login tokens (JWTs) are not cancelled on the server when you log out (this is by design — the README says they last 7 days, with no way to refresh them). A token copied before logout (for example, from DevTools) may keep working until it expires naturally. This can be fine as a deliberate choice for a first version, but it shouldn't just happen by accident.
+- A file-download link opened before access is revoked stays working for up to 5 minutes after the revoke (this matches the link's own lifetime, which the README documents). We checked this: the link worked right after revoking access, and stopped working about 5 minutes later. This is fine as a known, short time window, but it should be mentioned clearly in the release notes.
