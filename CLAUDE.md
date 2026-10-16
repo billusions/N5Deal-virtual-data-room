@@ -1,7 +1,7 @@
 # N5Deal — Virtual Data Room QA Assignment
 
 ## Context
-This repo holds deliverables for a Product QA practical assignment for an N5Deal job application (contact: Franklin, Co-Founder). The hiring process favors practical thinking and values over theoretical evaluation.
+This repo holds deliverables for a Product QA practical assignment for an N5Deal job application. The hiring process favors practical thinking and values over theoretical evaluation.
 
 - Product under test: https://github.com/evo9/virtual-data-room
 - Original requirements: https://github.com/evo9/virtual-data-room/blob/main/task.md
