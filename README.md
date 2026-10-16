@@ -34,6 +34,12 @@ npm run report        # last HTML report
 
 Set `HEADLESS=false` in `tests/.env` to watch the E2E browser while iterating.
 
+**CI:** `.github/workflows/qa-tests.yml` runs the full suite automatically on pushes to `tests/**`. To run it manually from GitHub's UI:
+1. Open the repo on GitHub → **Actions** tab.
+2. Select **QA automated tests** in the left sidebar.
+3. Click **Run workflow** (top right) → pick the branch → **Run workflow**.
+4. Open the run to see live logs; the `playwright-report` artifact (HTML report) is attached once it finishes.
+
 **Layout:**
 - `tests/specs/api/` — hits the backend directly (no browser): auth, access control (Priority 1), sharing/revoke (Priority 2), file/folder name conflicts (Priority 3/4).
 - `tests/specs/e2e/` — drives a real Chromium browser against the deployed UI for the few critical journeys the API layer can't verify: sign up → organize → sign out, upload → view, and the share → revoke flow across two independent browser sessions.
