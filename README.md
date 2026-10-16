@@ -3,23 +3,23 @@
 This is a QA test assignment for N5Deal. Full instructions: [CLAUDE.md](CLAUDE.md).
 
 ## Assumptions
-- We test the live app (on Vercel and Railway), not a local copy — we don't have the passwords/keys needed to run it locally.
-- We looked at the [evo9/virtual-data-room](https://github.com/evo9/virtual-data-room) source code only to design better tests, not to run it ourselves.
-- The test accounts are shared with other people. So our tests always make their own new data instead of changing anything that already exists.
-- We test the API directly too, not only through the screen (UI).
+- I test the live app (on Vercel and Railway), not a local copy — I don't have the passwords/keys needed to run it locally.
+- I looked at the [evo9/virtual-data-room](https://github.com/evo9/virtual-data-room) source code only to design better tests, not to run it myself.
+- The test accounts are shared with other people. So my tests always make their own new data instead of changing anything that already exists.
+- I test the API directly too, not only through the screen (UI).
 
 ## Contents
-- test-plan.md — what we test and how
-- findings-report.md — the bugs we found, sorted by how serious they are
-- manual-test-log.md — the full list of manual checks we did, one by one
-- testing-approach.md — short note on our approach and how we used AI
+- test-plan.md — what I test and how
+- findings-report.md — the bugs I found, sorted by how serious they are
+- manual-test-log.md — the full list of manual checks I did, one by one
+- testing-approach.md — short note on my approach and how I used AI
 - tests/ — the automated tests (API and browser tests, written with Playwright)
-- fixtures/manual-testing/ — PDF files we used to test uploading and viewing files
-- qa-report.md — the final summary: what we covered, risks, is it ready to release, and what to do next
+- fixtures/manual-testing/ — PDF files I used to test uploading and viewing files
+- qa-report.md — the final summary: what I covered, risks, is it ready to release, and what to do next
 
 ## How to run the automated tests
 
-We use Playwright (with TypeScript). The tests are split into levels (API tests and browser tests) — see [test-plan.md](test-plan.md) for why.
+I use Playwright (with TypeScript). The tests are split into levels (API tests and browser tests) — see [test-plan.md](test-plan.md) for why.
 
 ```
 cd tests
@@ -56,6 +56,6 @@ What's inside tests/:
 - tests/specs/e2e/ — opens a real Chrome browser against the live app, for the few important flows that only a real browser can check: sign up → create folders → sign out, upload a file → view it, and share → revoke access, using two separate browser sessions (one for the owner, one for the person it's shared with).
 - tests/src/support/ — shared helper code: a small API client, a helper to sign up through the UI, a way to make unique test names, and PDF test files made on the fly.
 
-Rules we follow:
+Rules I follow:
 - Every test creates its own new user and its own new data, with a unique name. The app and its accounts are shared with other people, so no test ever touches data that belongs to someone else.
 - Two tests record known bugs (sharing with yourself, and a space in the login email) using Playwright's test.fail(). They check for the *correct* behavior, which currently fails — that's expected, so the whole test run still shows as green without hiding the bug. If a bug ever gets fixed, that one test will suddenly pass when it shouldn't, and that's the signal to come back and update it.

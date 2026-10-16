@@ -1,10 +1,10 @@
 # Virtual Data Room — Findings Report
 
-Oct 15, 2026 · @Zhanna · See [test-plan.md](test-plan.md) for our method and what each severity level means, and [manual-test-log.md](manual-test-log.md) for the full, step-by-step list of checks behind this report.
+Oct 15, 2026 · @Zhanna · See [test-plan.md](test-plan.md) for my method and what each severity level means, and [manual-test-log.md](manual-test-log.md) for the full, step-by-step list of checks behind this report.
 
 ## Summary
 
-We found no Critical or High severity bugs. Access control (R2) and sharing/revoking access (R13–R16) — the two riskiest areas for a due-diligence product — passed every manual check we did. Most of what we found is about upload error handling and how the app looks and feels.
+I found no Critical or High severity bugs. Access control (R2) and sharing/revoking access (R13–R16) — the two riskiest areas for a due-diligence product — passed every manual check I did. Most of what I found is about upload error handling and how the app looks and feels.
 
 | Severity | Count |
 |---|---|
@@ -58,10 +58,10 @@ Actual: The full name is shown on one line, the table gets a horizontal scrollba
 | L7 | Upload | A failed upload still "keeps" its file name. Uploading the same file again gets renamed with a higher number ((4) instead of (3)), even though nothing with that name is visible anywhere | Same cause as M3 — failed uploads are never cleaned up (the README also mentions this) |
 | L8 | Navigation | The breadcrumb trail doesn't get shortened for deep folders or long names — it spreads over several lines and keeps growing | Low; would be Medium if it breaks the layout on a narrow screen |
 | L9 | Folders | A folder name is limited to 50 characters, with no message — typing just silently stops | The user has no idea why typing stopped. Suggest a character counter, or a "Max 50 characters" message. Also inconsistent with renaming a file, which does show "Name is too long" (see manual-test-log R4 vs R10) |
-| L10 | File viewer | The viewer's title bar shows the PDF's own internal title, or a storage ID, instead of the file's real name in the data room | Seen only with broken or untitled PDFs (see M2). When we checked again, normal PDFs showed the correct name |
+| L10 | File viewer | The viewer's title bar shows the PDF's own internal title, or a storage ID, instead of the file's real name in the data room | Seen only with broken or untitled PDFs (see M2). When I checked again, normal PDFs showed the correct name |
 | L11 | Rename | The rename box doesn't select the current name when it opens | The user has to delete the old name by hand first. For files, it would be better to select only the name part (not the .pdf ending) |
-| L12 | Sharing | The share box's own on-screen check rejects an email with a space before or after it ("Enter a valid email") | Fixed during automation: we confirmed this is only in the screen's own code — the API itself (CreateShareDto) already removes the extra spaces on its side, and the share works fine there (checked directly against the live API). Fixing the share box's own check to remove spaces first would solve this, with no change needed on the server |
-| L12b | Auth | Login and sign-up reject an email with a space before or after it, in the API itself, not only on screen | This has a different cause from L12, even though it looks the same: LoginDto/RegisterDto don't remove extra spaces before checking the email, so the server itself rejects it (400), no matter what the screen does. We wrote a known-failing automated test for this in tests/api/auth.spec.ts |
+| L12 | Sharing | The share box's own on-screen check rejects an email with a space before or after it ("Enter a valid email") | Fixed during automation: I confirmed this is only in the screen's own code — the API itself (CreateShareDto) already removes the extra spaces on its side, and the share works fine there (checked directly against the live API). Fixing the share box's own check to remove spaces first would solve this, with no change needed on the server |
+| L12b | Auth | Login and sign-up reject an email with a space before or after it, in the API itself, not only on screen | This has a different cause from L12, even though it looks the same: LoginDto/RegisterDto don't remove extra spaces before checking the email, so the server itself rejects it (400), no matter what the screen does. I wrote a known-failing automated test for this in tests/api/auth.spec.ts |
 | L13 | Sharing | If a folder is shared directly, and also shared because its parent folder is shared, it shows up twice for the person it's shared with | This could be okay, but it's confusing without a hint like "Already shared through 'parent folder'" |
 | L14 | Shared with me | The list doesn't show who shared an item, or which data room it came from | This matters once someone receives items shared by more than one person |
 | L15 | File list | There's no total item count shown for large folders that use infinite scroll | Suggest e.g. "124 items" |
@@ -69,8 +69,8 @@ Actual: The full name is shown on one line, the table gets a horizontal scrollba
 
 ## Open risk items (not confirmed bugs — need a clear decision from the team)
 
-We couldn't fully confirm whether these pass or fail during this round of testing. They look like deliberate design choices, so the team should make a clear decision about each one, instead of leaving it as an accident.
+I couldn't fully confirm whether these pass or fail during this round of testing. They look like deliberate design choices, so the team should make a clear decision about each one, instead of leaving it as an accident.
 
-- We didn't see any lockout or limit on repeated failed logins. We can't be fully sure there isn't one — this is worth checking directly before release, since this product is used for due diligence.
+- I didn't see any lockout or limit on repeated failed logins. I can't be fully sure there isn't one — this is worth checking directly before release, since this product is used for due diligence.
 - Login tokens (JWTs) are not cancelled on the server when you log out (this is by design — the README says they last 7 days, with no way to refresh them). A token copied before logout (for example, from DevTools) may keep working until it expires naturally. This can be fine as a deliberate choice for a first version, but it shouldn't just happen by accident.
-- A file-download link opened before access is revoked stays working for up to 5 minutes after the revoke (this matches the link's own lifetime, which the README documents). We checked this: the link worked right after revoking access, and stopped working about 5 minutes later. This is fine as a known, short time window, but it should be mentioned clearly in the release notes.
+- A file-download link opened before access is revoked stays working for up to 5 minutes after the revoke (this matches the link's own lifetime, which the README documents). I checked this: the link worked right after revoking access, and stopped working about 5 minutes later. This is fine as a known, short time window, but it should be mentioned clearly in the release notes.

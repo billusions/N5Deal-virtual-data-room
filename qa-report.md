@@ -4,9 +4,9 @@ Oct 16, 2026 · @Zhanna
 
 ## What was tested
 
-We tested the full functional scope of the deployed app (Vercel for the frontend, Railway for the API): logging in (R1), owner-only visibility (R2), folders (R4–R7), files (R8–R12), and sharing/public links/revoking access (R13–R16), plus the two named edge cases (E1, E2). We tested by risk — manual and exploratory testing first (two accounts, two browsers, slowing or cutting the network with DevTools), then automated the cases that would matter most if they broke silently later. See [test-plan.md](test-plan.md) for scope and method, [manual-test-log.md](manual-test-log.md) for the full step-by-step log, and [testing-approach.md](testing-approach.md) for how we used AI.
+I tested the full functional scope of the deployed app (Vercel for the frontend, Railway for the API): logging in (R1), owner-only visibility (R2), folders (R4–R7), files (R8–R12), and sharing/public links/revoking access (R13–R16), plus the two named edge cases (E1, E2). I tested by risk — manual and exploratory testing first (two accounts, two browsers, slowing or cutting the network with DevTools), then automated the cases that would matter most if they broke silently later. See [test-plan.md](test-plan.md) for scope and method, [manual-test-log.md](manual-test-log.md) for the full step-by-step log, and [testing-approach.md](testing-approach.md) for how I used AI.
 
-Not tested, and why: performance/load testing — we don't have a separate environment, so this would mean putting load on the shared live system that other candidates also use; unit tests — these belong to the developers; features the README says were left out on purpose (moving a folder between data rooms, refresh tokens, search, file versioning); and testing on mobile or many different browsers.
+Not tested, and why: performance/load testing — I don't have a separate environment, so this would mean putting load on the shared live system that other candidates also use; unit tests — these belong to the developers; features the README says were left out on purpose (moving a folder between data rooms, refresh tokens, search, file versioning); and testing on mobile or many different browsers.
 
 ## Key issues and risks
 
@@ -18,9 +18,9 @@ No Critical or High severity bugs. The two riskiest areas for a due-diligence pr
 - M3 — retrying an upload after a dropped connection fails with a confusing "status 400" (the real cause: the retry sends the file to the same one-time storage link again, instead of just confirming the upload)
 - M4 — a long file name breaks the file-list table layout and hides the row's actions menu
 
-17 Low findings — mostly about look, feel, and wording; full list in [findings-report.md](findings-report.md). We made one correction while automating: L12 (email with a space, in sharing) turned out to be a bug only on screen — the API itself already removes the space and accepts it correctly.
+17 Low findings — mostly about look, feel, and wording; full list in [findings-report.md](findings-report.md). I made one correction while automating: L12 (email with a space, in sharing) turned out to be a bug only on screen — the API itself already removes the space and accepts it correctly.
 
-3 open risk items, marked for the team to make a clear decision on rather than reported as bugs, since they might be deliberate choices for a first version: no login lockout or limit that we could find; login tokens aren't cancelled on the server when you log out (they last 7 days, with no refresh, by design); and a download link opened just before access is revoked keeps working for the rest of its roughly 5-minute lifetime.
+3 open risk items, marked for the team to make a clear decision on rather than reported as bugs, since they might be deliberate choices for a first version: no login lockout or limit that I could find; login tokens aren't cancelled on the server when you log out (they last 7 days, with no refresh, by design); and a download link opened just before access is revoked keeps working for the rest of its roughly 5-minute lifetime.
 
 ## Automated coverage
 
@@ -37,11 +37,11 @@ Not automated, on purpose: visual/layout bugs (M4, the breadcrumb not shortening
 
 ## Release readiness
 
-Ready to release, for the areas we tested, with the 4 Medium findings as the list to fix before release — none of them block the release (each one has a way around it, or is only about look/feel), but M2 (accepting fake PDF content) and M1 (deleting a shared folder with no warning) are the two worth fixing first, given this is a due-diligence product. The 3 open risk items need a clear decision from the team — whether each one is a deliberate choice or a real gap — instead of shipping either way without deciding.
+Ready to release, for the areas I tested, with the 4 Medium findings as the list to fix before release — none of them block the release (each one has a way around it, or is only about look/feel), but M2 (accepting fake PDF content) and M1 (deleting a shared folder with no warning) are the two worth fixing first, given this is a due-diligence product. The 3 open risk items need a clear decision from the team — whether each one is a deliberate choice or a real gap — instead of shipping either way without deciding.
 
 ## What's next
 
-- Automate M1 and M2 once we can trigger them reliably through the API (M2 needs an upload request where the stated file type doesn't match the real content; M1 needs a check that the delete-preview mentions active shares).
+- Automate M1 and M2 once I can trigger them reliably through the API (M2 needs an upload request where the stated file type doesn't match the real content; M1 needs a check that the delete-preview mentions active shares).
 - A simple visual check for the table/breadcrumb layout bugs (M4, L8) — these are hard to catch any other way.
 - Check the 3 open risk items directly with the dev team, and get a clear decision on each one.
 - Performance/load testing, once there's a separate environment where it's safe to test this without affecting anyone else.

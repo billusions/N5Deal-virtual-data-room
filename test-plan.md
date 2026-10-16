@@ -13,10 +13,10 @@ The goal is to check whether the deployed Virtual Data Room app meets its origin
 - Checking again the bugs that the developer's README says are already fixed
 
 ### Out of scope
-- Performance and load testing — we don't have a separate environment for this; we only looked at how the README describes the system scaling
-- Unit tests — these belong to the developers; the existing unit tests in the repo are the base layer of our testing pyramid
+- Performance and load testing — I don't have a separate environment for this; I only looked at how the README describes the system scaling
+- Unit tests — these belong to the developers; the existing unit tests in the repo are the base layer of my testing pyramid
 - Features the README says were left out on purpose: moving a folder between data rooms, refresh tokens, search, and file versioning (these are known gaps, not bugs)
-- Mobile apps and testing on many different browsers — we only used desktop Chrome, plus a quick check with a narrow browser window
+- Mobile apps and testing on many different browsers — I only used desktop Chrome, plus a quick check with a narrow browser window
 
 ## Requirements under test
 
@@ -45,18 +45,18 @@ The requirements come from task.md. Priority shows how bad it would be if that p
 
 ## Approach
 
-We test by risk: explore by hand first, then automate the most important and repeatable cases, mostly at the API level.
+I test by risk: explore by hand first, then automate the most important and repeatable cases, mostly at the API level.
 
 1. Requirements review — turn task.md into the R1–R16 list, and point out anything unclear or missing (for example: what happens with duplicate upload names, or when a shared item gets deleted).
 2. Manual and exploratory testing — testing each area for a set amount of time, using two browsers (one as the owner, one as the person something is shared with), and Chrome's DevTools to slow down the network or go offline.
 3. Re-checking old fixes — check again the bugs the README says are already fixed (breadcrumb showing things it shouldn't, old data left after logout, duplicate files after a failed upload retry, empty names).
 4. Automation, following the testing pyramid:
-   - Unit tests: already written by the developers; we don't add more of these
-   - API tests (most of our automated tests): login, access control, sharing, revoking access, name clashes
+   - Unit tests: already written by the developers; I don't add more of these
+   - API tests (most of my automated tests): login, access control, sharing, revoking access, name clashes
    - Browser tests (2–4 tests): only the most important user flows
-5. Reporting — group what we found by area, and sort it by how serious it is and how much it matters for the business.
+5. Reporting — group what I found by area, and sort it by how serious it is and how much it matters for the business.
 
-Rules for automation: We use Playwright (TypeScript) for both the API and the browser tests. Every test makes its own data with a unique name, because the accounts and the app are shared with other people. Settings and passwords are kept outside the test code, not written directly into it.
+Rules for automation: I use Playwright (TypeScript) for both the API and the browser tests. Every test makes its own data with a unique name, because the accounts and the app are shared with other people. Settings and passwords are kept outside the test code, not written directly into it.
 
 AI usage: AI helped with understanding the requirements, coming up with test ideas, writing up the bugs clearly, and writing the repeated setup code for automation. Everything AI produced was checked by actually running it against the app. See [testing-approach.md](testing-approach.md) for more detail.
 
@@ -75,17 +75,17 @@ Access control comes first. In a data room, data reaching the wrong person is wo
 
 ## Environment and test data
 
-We test against the real, shared, live app, so all our test data has a unique name and can be safely thrown away.
+I test against the real, shared, live app, so all my test data has a unique name and can be safely thrown away.
 
 - Browser: Chrome (desktop), DevTools for network inspection, throttling and Offline mode
-- Accounts: the README's own test accounts (john@example.com as owner, viewer@example.com as recipient), used to double-check results; our own accounts (zhanna.qa.owner@example.com, zhanna.qa.viewer@example.com), used for clean tests that don't depend on anyone else
+- Accounts: the README's own test accounts (john@example.com as owner, viewer@example.com as recipient), used to double-check results; my own accounts (zhanna.qa.owner@example.com, zhanna.qa.viewer@example.com), used for clean tests that don't depend on anyone else
 - Test files: small and multi-page valid PDFs, non-PDF files (JPG, PNG, GIF, SVG), a non-PDF renamed to .pdf, duplicate file names
 - Naming: test data is named with a prefix and the time it was created (e.g. qa-room-<timestamp>), so two tests never clash
-- Risk with this environment: since accounts are shared, other candidates might change or delete data, which could make a test fail for the wrong reason. We double-check anything unexpected before reporting it as a bug
+- Risk with this environment: since accounts are shared, other candidates might change or delete data, which could make a test fail for the wrong reason. I double-check anything unexpected before reporting it as a bug
 
 ## When testing starts and ends, and severity levels
 
-Before we start: the app and API must be reachable (the /health check responds), test accounts must be able to log in, and we must have reviewed the requirements.
+Before I start: the app and API must be reachable (the /health check responds), test accounts must be able to log in, and I must have reviewed the requirements.
 
 Ready to release when: there are no open Critical or High bugs; every Critical requirement (R2, R13–R16) has been tested and passes; and the automated tests all pass, except the ones that are meant to fail because they record a known bug.
 
@@ -98,7 +98,7 @@ Ready to release when: there are no open Critical or High bugs; every Critical r
 
 ## Schedule and deliverables
 
-We have 24 hours total, with about 6 hours for automation, so manual testing of the most important areas comes first.
+I have 24 hours total, with about 6 hours for automation, so manual testing of the most important areas comes first.
 
 | Block | Time | Output |
 |---|---|---|
@@ -108,4 +108,4 @@ We have 24 hours total, with about 6 hours for automation, so manual testing of 
 | Automation framework and tests | 5–6 h | Playwright repo with API and browser tests, README |
 | QA report | 1–2 h | Final QA report with release readiness and next steps |
 
-What we deliver: a test plan, a findings report sorted by priority, automated tests (in this repo), a short note on our testing approach, and a final QA report that also covers how we used AI.
+What I deliver: a test plan, a findings report sorted by priority, automated tests (in this repo), a short note on my testing approach, and a final QA report that also covers how I used AI.

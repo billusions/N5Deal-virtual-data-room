@@ -31,7 +31,7 @@ PDF files used for upload/viewer testing, in [fixtures/manual-testing/](fixtures
 - After logging in from that redirect → note: it returns to the home page, not the page you originally asked for
 - Sign out as owner, log in as viewer → no leftover owner data shown (checked again since the dev said this was fixed) — fine
 - Using the login token again after logging out, directly against the API → not fully tested (see Risk items; by design, the server doesn't cancel tokens)
-- Does the session expire after 7 days? → couldn't test this in the time we had; this is just what the docs say
+- Does the session expire after 7 days? → couldn't test this in the time I had; this is just what the docs say
 - Two tabs open, sign out in one → the other tab correctly asks you to log in again on the next action
 
 ## R2. Owner-only visibility (Critical)
