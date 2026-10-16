@@ -103,9 +103,9 @@ Up to 24 hours were allowed. Actual time spent came to about 7.5-8.5 hours, with
 | Block | Time | Output |
 |---|---|---|
 | Requirements review and test plan | 30m | This test plan |
-| Manual and exploratory testing | 5 h | Findings with evidence |
+| Manual and exploratory testing | 5 h | Manual test log and findings with evidence |
 | Findings report | 30m | Findings report, sorted by priority |
 | Automation framework and tests | 1-2 h | Playwright repo with API and browser tests, README |
 | QA report | 30m | Final QA report with release readiness and next steps |
 
-What I deliver: a test plan, a findings report sorted by priority, automated tests (in this repo), a short note on my testing approach, and a final QA report that also covers how I used AI.
+What I deliver: a test plan, a manual test log (every check and its result), a findings report sorted by priority, automated tests (in this repo), a short note on my testing approach that also covers how I used AI, and a final QA report.
