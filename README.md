@@ -12,6 +12,7 @@ QA practical assignment for N5Deal. Brief: [CLAUDE.md](CLAUDE.md).
 - `test-plan.md` — scope and approach
 - `findings-report.md` — bugs, grouped and prioritized
 - `manual-test-log.md` — full requirement-by-requirement execution log
+- `testing-approach.md` — short description of the approach and AI usage
 - `tests/` — automated suite (API + E2E, Playwright/TypeScript)
 - `fixtures/manual-testing/` — PDFs used for manual upload/viewer testing
 - `qa-report.md` — final summary (coverage, risks, release readiness, next steps)
