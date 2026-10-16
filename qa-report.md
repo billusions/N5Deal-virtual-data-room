@@ -19,7 +19,7 @@ No Critical or High severity bugs. The two riskiest areas for a due-diligence pr
 - M4 — a long file name breaks the file-list table layout and hides the row's actions menu
 - M5 — a downloaded file whose name contains parentheses or "&" is saved with an encoded name ("Lorem ipsum (5).pdf" → "Lorem ipsum %285%29.pdf"), which hits every duplicate the app renames itself
 
-18 Low findings — mostly about look, feel, and wording; full list in [findings-report.md](findings-report.md). I made one correction while automating: L12 (email with a space, in sharing) turned out to be a bug only on screen — the API itself already removes the space and accepts it correctly.
+18 Low findings — mostly about look, feel, and wording; full list in [findings-report.md](findings-report.md). One correction came up while automating: Claude's check against the live API showed that L12 (email with a space, in sharing) is a bug only on screen — the API itself already removes the space and accepts it correctly.
 
 3 open risk items, marked for the team to make a clear decision on rather than reported as bugs, since they might be deliberate choices for a first version: no login lockout or limit that I could find; login tokens aren't cancelled on the server when you log out (they last 7 days, with no refresh, by design); and a download link opened just before access is revoked keeps working for the rest of its roughly 5-minute lifetime.
 

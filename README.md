@@ -3,10 +3,10 @@
 This is a QA test assignment for N5Deal. Full instructions: [CLAUDE.md](CLAUDE.md).
 
 ## Assumptions
-- I test the live app (on Vercel and Railway), not a local copy — I don't have the passwords/keys needed to run it locally.
+- I test the live app (on Vercel and Railway), not a local copy. That's the version real users get.
 - I didn't read the [evo9/virtual-data-room](https://github.com/evo9/virtual-data-room) source code myself. Claude Code read it to help design the API tests (see AI usage in [testing-approach.md](testing-approach.md)); the code was never run locally.
 - The test accounts are shared with other people. So my tests always make their own new data instead of changing anything that already exists.
-- I test the API directly too, not only through the screen (UI).
+- I tested by hand through the screen (UI) only. The API is tested directly by the automated tests, not by hand.
 
 ## Contents
 - test-plan.md — what I test and how
