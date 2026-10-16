@@ -30,8 +30,11 @@ cp .env.example .env   # already points at the deployed app
 npm test              # everything
 npm run test:api      # API tests only (fast, no browser)
 npm run test:e2e      # browser tests only
+npm run test:flaky-check  # run every test 8 times in a row, to catch flaky ones (~5-10 min)
 npm run report        # last HTML report
 ```
+
+To check for flaky tests, run each test several times in a row and see if any of them pass sometimes and fail other times. No retries are configured locally, so every failure shows up — nothing is hidden. `npm run test:flaky-check` runs the whole suite 8 times (about 5-10 minutes); for a different number of repeats, run `npx playwright test --repeat-each=<N>` directly. Safe to stop early with Ctrl+C — each repeat is independent, so a partial run is still useful.
 
 Set HEADLESS=false in tests/.env if you want to watch the browser while the tests run.
 
