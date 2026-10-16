@@ -38,7 +38,14 @@ Set `HEADLESS=false` in `tests/.env` to watch the E2E browser while iterating.
 1. Open the repo on GitHub → **Actions** tab.
 2. Select **QA automated tests** in the left sidebar.
 3. Click **Run workflow** (top right) → pick the branch → **Run workflow**.
-4. Open the run to see live logs; the `playwright-report` artifact (HTML report) is attached once it finishes.
+4. Click into the run to watch live logs.
+
+To view the report once the run finishes:
+1. On the finished run's summary page, scroll down to **Artifacts**.
+2. Download **playwright-report** (a `.zip`) — GitHub doesn't render it inline.
+3. Unzip it and open `index.html` in a browser.
+
+Artifacts are kept for 14 days, then GitHub deletes them — the link to a specific run's artifact isn't permanent, so don't bookmark one.
 
 **Layout:**
 - `tests/specs/api/` — hits the backend directly (no browser): auth, access control (Priority 1), sharing/revoke (Priority 2), file/folder name conflicts (Priority 3/4).
