@@ -98,14 +98,14 @@ Ready to release when: there are no open Critical or High bugs; every Critical r
 
 ## Schedule and deliverables
 
-I have 24 hours total, with about 6 hours for automation, so manual testing of the most important areas comes first.
+Up to 24 hours were allowed. Actual time spent came to about 7.5-8.5 hours, with manual testing of the most important areas taking the largest share.
 
 | Block | Time | Output |
 |---|---|---|
-| Requirements review and test plan | 1–2 h | This test plan |
-| Manual and exploratory testing | 5–6 h | Findings with evidence |
-| Findings report | 1–2 h | Findings report, sorted by priority |
-| Automation framework and tests | 5–6 h | Playwright repo with API and browser tests, README |
-| QA report | 1–2 h | Final QA report with release readiness and next steps |
+| Requirements review and test plan | 30m | This test plan |
+| Manual and exploratory testing | 5 h | Findings with evidence |
+| Findings report | 30m | Findings report, sorted by priority |
+| Automation framework and tests | 1-2 h | Playwright repo with API and browser tests, README |
+| QA report | 30m | Final QA report with release readiness and next steps |
 
 What I deliver: a test plan, a findings report sorted by priority, automated tests (in this repo), a short note on my testing approach, and a final QA report that also covers how I used AI.
