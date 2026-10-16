@@ -11,7 +11,7 @@ No Critical or High severity bugs were found. Access control (R2) and sharing/re
 | Critical | 0 |
 | High | 0 |
 | Medium | 4 |
-| Low | 16 |
+| Low | 17 |
 | Open risk items (not confirmed bugs) | 3 |
 
 ## Medium
@@ -53,11 +53,12 @@ No Critical or High severity bugs were found. Access control (R2) and sharing/re
 | L9 | Folders | Folder name is capped at 50 characters with no message — typing silently stops | Inconsistent with file rename, which does show "Name is too long" (see manual-test-log R4 vs R10) |
 | L10 | File viewer | Viewer header shows the PDF's internal title or a storage ID instead of the data room file name | Observed specifically for broken/untitled PDFs (see M2); normal PDFs displayed the correct name correctly in retest |
 | L11 | Rename | Rename dialog doesn't preselect the current name on open | User must manually delete the old name first; for files, ideally select only the name part (not `.pdf`) |
-| L12 | Sharing | Email with a trailing space is rejected as invalid instead of being trimmed | `"Enter a valid email"` shown for an otherwise-valid address |
-| L12b | Auth | Login/register also reject an email with a leading/trailing space instead of trimming it (API-confirmed) | Same root cause as L12, broader scope: `CreateShareDto` trims before validating, but `LoginDto`/`RegisterDto` validate before the service's internal trim ever runs — automated as a known-failing test in `tests/api/auth.spec.ts` |
+| L12 | Sharing | Share dialog's **client-side** validation rejects an email with a trailing/leading space (`"Enter a valid email"`) | **Corrected during automation:** confirmed frontend-only — the API itself (`CreateShareDto`) already trims the email server-side and the share succeeds (verified directly against the live API). Fixing the share dialog's input validation to trim before checking would resolve this with no backend change needed |
+| L12b | Auth | Login/register reject an email with a leading/trailing space **at the API itself**, not just the UI | Different root cause from L12, despite the similar symptom: `LoginDto`/`RegisterDto` have no trim-before-validate step, so the backend rejects it directly (400) regardless of what the UI does. Automated as a known-failing test in `tests/api/auth.spec.ts` |
 | L13 | Sharing | A folder shared directly *and* via a shared parent appears twice for the recipient | Arguably acceptable, but confusing without a hint like "Already shared through 'parent folder'" |
 | L14 | Shared with me | List doesn't show who shared an item or which data room it came from | Matters once a recipient receives items from multiple parties |
 | L15 | File list | No total item count shown for large folders using infinite scroll | Suggest e.g. "124 items" |
+| L16 | File list | Row actions menu (⋮) has no "View"/"Open" item — Rename, Move, Download, Share, Delete only | Opening a file only works by clicking the row itself; not discoverable from the menu. Found while writing the E2E viewer test |
 
 ## Open risk items (not confirmed bugs — flagged for explicit product sign-off)
 

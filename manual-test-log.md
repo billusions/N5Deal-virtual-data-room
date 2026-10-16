@@ -128,6 +128,7 @@ PDF files used for upload/viewer testing, in [fixtures/manual-testing/](fixtures
 - F5 while viewing → stays on the file — fine
 - Download → saved with correct file name, not a UUID — fine
 - As viewer → can view/download if allowed, cannot edit — fine
+- Row actions menu (⋮) has no "View"/"Open" item — only Rename, Move, Download, Share, Delete; opening a file is only discoverable by clicking the row (see L16, found while writing the E2E viewer test)
 
 ## R10. Rename a file
 - Valid new name → updated in list — fine
