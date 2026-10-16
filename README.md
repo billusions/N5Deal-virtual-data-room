@@ -9,13 +9,13 @@ This is a QA test assignment for N5Deal. Full instructions: [CLAUDE.md](CLAUDE.m
 - I tested by hand through the screen (UI) only. The API is tested directly by the automated tests, not by hand.
 
 ## Contents
-- test-plan.md — what I test and how
-- findings-report.md — the bugs I found, sorted by how serious they are
-- manual-test-log.md — the full list of manual checks I did, one by one
-- testing-approach.md — short note on my approach and how I used AI
-- tests/ — the automated tests (API and browser tests, written with Playwright)
-- fixtures/manual-testing/ — PDF files I used to test uploading and viewing files
-- qa-report.md — the final summary: what I covered, risks, is it ready to release, and what to do next
+- [qa-report.md](qa-report.md) — start here: the final summary of what I covered, risks, whether it's ready to release, and what to do next
+- [test-plan.md](test-plan.md) — what I test and how
+- [findings-report.md](findings-report.md) — the bugs I found, sorted by how serious they are
+- [manual-test-log.md](manual-test-log.md) — the full list of manual checks I did, one by one
+- [testing-approach.md](testing-approach.md) — short note on my approach and how I used AI
+- [tests/](tests/) — the automated tests (API and browser tests, written with Playwright)
+- [fixtures/manual-testing/](fixtures/manual-testing/) — PDF files I used to test uploading and viewing files
 
 ## How to run the automated tests
 
@@ -38,7 +38,7 @@ To check for flaky tests, run each test several times in a row and see if any of
 
 Set HEADLESS=false in tests/.env if you want to watch the browser while the tests run.
 
-CI (automatic testing): .github/workflows/qa-tests.yml runs all the tests automatically whenever something changes inside tests/. You can also start it by hand from GitHub's website:
+CI (automatic testing): [.github/workflows/qa-tests.yml](.github/workflows/qa-tests.yml) runs all the tests automatically whenever something changes inside tests/. You can also start it by hand from GitHub's website:
 1. Open the repo on GitHub → Actions tab.
 2. Select QA automated tests in the left sidebar.
 3. Click Run workflow (top right) → pick the branch → Run workflow.
