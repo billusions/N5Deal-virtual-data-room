@@ -21,10 +21,15 @@ Area: Data integrity (R7) · Why it matters: A data room is used during real bus
 Expected: The dialog says something like "This folder is shared with 2 people and has a public link. They will lose access."
 Actual: The warning shows how many items and how much size will be deleted, but says nothing about the shares.
 
+![Delete dialog for a shared folder, with no mention of the active share](fixtures/screenshots/m1-delete-dialog-no-share-warning.png)
+
 ### M2 — [Upload] Non-PDF file renamed to .pdf is accepted, then fails to open in the viewer
 Area: Upload (R8) · Why it matters: In due diligence, a file that looks fine in the list but is actually broken is a real problem. Accepting any file content just because it's named .pdf is also a gap in checking the file.
 Expected: The upload is rejected with a message like "This file isn't a valid PDF."
 Actual: The upload works. Opening the file shows the browser's own error, "Failed to load PDF document," and the viewer's title bar shows an internal file ID (0b491ba5-...) instead of the real file name (1.pdf).
+
+![Accepted fake PDF with a blank, unusable preview](fixtures/screenshots/m2-broken-pdf-viewer.png)
+(Screenshot taken with an automated browser, which has no built-in PDF viewer at all, so it shows a blank area here rather than Chrome's own "Failed to load PDF document" error — the core bug is the same either way: the file is accepted and can't actually be viewed.)
 
 ### M3 — [Upload] Retry after connection loss fails with status 400; file can't be recovered
 Area: Upload (R8) · Why it matters: If the connection is unstable, a user can't finish an upload by retrying — they have to start over, and nothing tells them why.
@@ -37,6 +42,8 @@ Related: L7 (failed uploads still "use up" their file name) comes from the same 
 Area: Look and feel (R3, R10) · Why it matters: One long file name breaks the layout for the whole folder and hides the ⋮ menu on that row.
 Expected: Long names get cut short with …, and the full name shows when you hover over it. The columns stay in place.
 Actual: The full name is shown on one line, the table gets a horizontal scrollbar, and the Size/Modified columns and the actions menu get pushed off the screen.
+
+![A 120-character file name pushes the Size, Modified, and actions columns off-screen](fixtures/screenshots/m4-long-filename-breaks-table.png)
 
 ## Low
 
